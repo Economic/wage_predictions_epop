@@ -1,11 +1,11 @@
 # define subset of valid wage observations for training & testing
 set.seed(seed)
 cps_wages_split <- read_feather(here("data", "cps_wages.feather")) %>% 
-  initial_split(prop = training_sample_prop, strata = year)
+  initial_split(prop = training_sample_prop, strata = log_wage, breaks = 5)
 
 cps_training <- training(cps_wages_split) 
 cps_testing <- testing(cps_wages_split)
-cps_folds <- vfold_cv(cps_training, v = folds, strata = year)
+cps_folds <- vfold_cv(cps_training, v = folds, strata = log_wage, breaks = 5)
 
 # problems w/ factors in xgboost using add_variables()
 # but not with add_formula. so here I construct the formula:
